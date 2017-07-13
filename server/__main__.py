@@ -59,8 +59,7 @@ if __name__ == "__main__":
         #render_task_data = shelve.Shelf(dumbdbm.open(Config.data_path + "temp/render", 'w'))
         render_task_data["kind"] = task
         render_task_data.close();
-        #if os.path.exists(temp_file) :
-        #    os.remove(temp_file)
+        
         ClearFiles()
 
         start = datetime.now()
@@ -70,8 +69,6 @@ if __name__ == "__main__":
         escape = (end - start).seconds
         print(escape)
 
-        #render_data_file = shelve.open(Config.data_path +  "temp/render")
-        #render_data_file = shelve.Shelf(dumbdbm.open(Config.data_path + "temp/render", 'w'))
         render_data_file = shelve.open(Config.data_path + "temp/render")
         state = render_data_file["render"]
         render_data_file.close()
@@ -81,7 +78,6 @@ if __name__ == "__main__":
                 m_id = visual.AddMaterial("", state.color, state.material_name)
                 v_id = visual.AddMaterialVisual(m_id, state.width, state.height, state.file_format, state.sample, escape, state.scene, state.model)
                 del visual
-                #visual.AddMaterialVisual()
                 aliyun_oss = AliyunOSS()
                 aliyun_oss.Save(temp_file, "render/material/original/{0:08X}.png".format(v_id))
                 resize(temp_file, temp_file2, 400)
@@ -95,11 +91,20 @@ if __name__ == "__main__":
             if len(result) == 13:
                 visual = VisualData()
                 aliyun_oss = AliyunOSS()
-                p_id = visual.AddPlanet(planet["kind"], planet["ring"])
+                p_id = visual.AddPlanet(planet["kind"], planet["ring"], Config.server_name)
                 for r in result :
                     v_id = visual.AddPlanetVisual(p_id, r["x"], r["y"], r["sample"], r["fps"], r["length"], r["frame"], r["format"], r["render_time"], r["rotate"], r["light_angle"])
                     if r["format"] == "PNG":
-                        aliyun_oss.Save(Config.data_path + "/temp/{0:04d}.png".format(r["frame"]), "render/planet/original/{0:08X}.png".format(v_id))
+                        temp_original = Config.data_path + "temp/{0:04d}.png".format(r["frame"])
+                        temp_middle = Config.data_path + "temp/{0:04d}_m.png".format(r["frame"])
+                        temp_small = Config.data_path + "temp/{0:04d}_s.png".format(r["frame"])
+                        resize(temp_original, temp_middle, 300)
+                        resize(temp_original, temp_small, 100)
+                        aliyun_oss.Save(temp_original, "render/planet/original/{0:08X}.png".format(v_id))
+                        aliyun_oss.Save(temp_middle, "render/planet/middle/{0:08X}.png".format(v_id))
+                        aliyun_oss.Save(temp_small, "render/planet/small/{0:08X}.png".format(v_id))
+
                     else :
-                        aliyun_oss.Save(Config.data_path + "/temp/0000-0239.mp4", "render/planet/video/{0:08X}.mp4".format(p_id))
+                        aliyun_oss.Save(Config.data_path + "temp/0000-0239.mp4", "render/planet/video/{0:08X}.mp4".format(p_id))
+                del visual
         time.sleep(5)

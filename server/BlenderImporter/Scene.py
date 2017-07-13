@@ -217,9 +217,18 @@ class SpaceScene(Scene):
             bpy.data.objects["Camera"].location[1] = 6
 
         kinds = ['earth', 'moon', 'hot', 'gas']
-        kind = choice(kinds)
+        #kind = choice(kinds)
+        choice_value = random.random()
+        if choice_value < 0.4:
+            kind = 'earth'
+        elif choice_value < 0.55:
+            kind = 'moon'
+        elif choice_value < 0.75:
+            kind = 'hot'
+        else:
+            kind = 'gas'
+
         self.kind = kind
-        #kind = 'earth'
         if kind == 'earth' :
             self.ShowRandomEarth()
         elif kind == 'moon' :

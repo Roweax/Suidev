@@ -57,9 +57,9 @@ class VisualData(SqlConnector) :
     def __del__(self) :
         super(VisualData, self).__del__()
 
-    def AddPlanet(self, kind, ring) :
-        insert_cmd = "INSERT INTO suidev_planet (name, create_time, kind, ring) VALUE(%s, %s, %s, %s)"
-        insert_data = ("", datetime.now(), kind, ring)
+    def AddPlanet(self, kind, ring, server_name) :
+        insert_cmd = "INSERT INTO suidev_planet (name, create_time, kind, ring, server_name) VALUE(%s, %s, %s, %s)"
+        insert_data = ("", datetime.now(), kind, ring, server_name)
         self.cur.execute(insert_cmd, insert_data)
         return self.cur.lastrowid
 

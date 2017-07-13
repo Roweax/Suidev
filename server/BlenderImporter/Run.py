@@ -2,7 +2,7 @@ import sys
 import os
 import shelve
 import dbm
-sys.path.append("/root/develop/suidev/")
+sys.path.append("/root/develop/suidev/server/")
 sys.path.append("/root/develop/suidev/server/BlenderImporter/")
 
 print("Blender Script  run at %s", sys.executable)
