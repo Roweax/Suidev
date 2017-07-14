@@ -58,7 +58,7 @@ class VisualData(SqlConnector) :
         super(VisualData, self).__del__()
 
     def AddPlanet(self, kind, ring, server_name) :
-        insert_cmd = "INSERT INTO suidev_planet (name, create_time, kind, ring, server_name) VALUE(%s, %s, %s, %s)"
+        insert_cmd = "INSERT INTO suidev_planet (name, create_time, kind, ring, server_name) VALUE(%s, %s, %s, %s, %s)"
         insert_data = ("", datetime.now(), kind, ring, server_name)
         self.cur.execute(insert_cmd, insert_data)
         return self.cur.lastrowid
@@ -78,10 +78,10 @@ class VisualData(SqlConnector) :
         self.cur.execute('select * from suidev_planet_visual AS V join suidev_planet AS P on V.planet_id = P.id ORDER BY V.create_time DESC')
         return self.cur.fetchall()
 
-    def AddMaterial(self, name, color, kind):
+    def AddMaterial(self, name, color, kind, server_name):
         rgba = BlenderImporter.Color.RGBA_to_Hex(color)
-        insert_cmd = "INSERT INTO suidev_material (name, create_time, color, kind) VALUE(%s, %s, %s, %s)"
-        insert_data = (name, datetime.now(), rgba, kind)
+        insert_cmd = "INSERT INTO suidev_material (name, create_time, color, kind) VALUE(%s, %s, %s, %s, %s)"
+        insert_data = (name, datetime.now(), rgba, kind, server_name)
         self.cur.execute(insert_cmd, insert_data)
         return self.cur.lastrowid
 
