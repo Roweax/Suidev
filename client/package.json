@@ -1,19 +1,35 @@
 {
-  "name": "client",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:5000",
+      "ws": true
+    }
   },
-  "author": "Roweax",
-  "license": "ISC",
   "dependencies": {
+    "echarts": "^3.6.2",
+    "express": "^4.15.3",
+    "express-generator": "^4.15.0",
+    "material-ui": "^0.18.2",
     "react": "^15.5.4",
-    "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.4.5"
+    "react-dom": "^15.5.4",
+    "react-tap-event-plugin": "^2.0.1"
   },
   "devDependencies": {
-    "react-dom": "^15.5.4"
-  }
+    "react-scripts": "1.0.7",
+    "webpack": "^2.6.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).",
+  "main": "webpack.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
