@@ -1,27 +1,11 @@
 import React, { Component } from 'react';
 import './DevelopPage.css';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-import RaisedButton from 'material-ui/RaisedButton';
-import Checkbox from 'material-ui/Checkbox';
 import Chip from 'material-ui/Chip';
 
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider'
-import Chart from '../components/Chart.js'
-import Task from '../components/Task.js'
-import Page from '../components/Pager.js'
 
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from 'material-ui/Table';
 
 
 const paper_style = {
@@ -75,10 +59,21 @@ class DevelopPage extends Component {
 
             <Divider />
             <h3>系统</h3>
-            <p>本站使用阿里云的系列产品</p>
-            <p>ESC服务器：1核CPU，4GB内存，Debian 8.6 64位操作系统</p>
-            <p>数据库RDS版：MySQL 5.5</p>
-            <p>对象存储OSS</p>
+            <p>本站使用阿里云和AWS的系列产品</p>
+            <p>服务器：</p>
+            <ul>
+            <li>1核CPU，4GB内存，Debian 8.6 64位操作系统（阿里云华东 ESC ecs.mn4.small）</li>
+            <li>1核CPU，1GB内存，Ubuntu 16.04 64位操作系统（阿里云美国西部 ESC ecs.xn4.small）</li>
+            <li>1核CPU，2GB内存，Ubuntu 16.04 64位操作系统（AWS美国西部 EC2 t2.micro）</li>
+            </ul>
+            <p>数据库：</p>
+            <ul>
+            <li>阿里云RDS版 MySQL 5.5</li>
+            </ul>
+            <p>对象存储：</p>
+            <ul>
+            <li>阿里云OSS</li>
+            </ul>
 
             <Divider />
             <h3>应用</h3>

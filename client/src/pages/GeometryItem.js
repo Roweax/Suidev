@@ -1,33 +1,7 @@
 import React, { Component } from 'react';
 import './MaterialItem.css';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-
-import Avatar from 'material-ui/Avatar';
-import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
-
-const styles = {
-    chip: {
-        margin: 4
-    },
-
-
-    wrapper: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-
-    paper:{
-        height: 40,
-        width: 40,
-        margin: "0 10",
-        textAlign: 'center',
-        display: 'inline-block',
-    }
-};
 
 
 class GeometryItem extends Component {

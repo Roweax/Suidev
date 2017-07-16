@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import './MaterialItem.css';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-
-import Avatar from 'material-ui/Avatar';
-import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
 
 const styles = {
@@ -14,7 +9,7 @@ const styles = {
         margin: 4
     },
 
-    
+
     wrapper: {
         display: 'flex',
         flexWrap: 'wrap',

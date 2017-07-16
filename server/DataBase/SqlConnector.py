@@ -6,7 +6,7 @@ import DBUtils.PersistentDB
 from Config import Config
 import BlenderImporter.Color
 class CJsonEncoder(json.JSONEncoder):
-    
+
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
@@ -30,7 +30,7 @@ class SqlConnector(object):
         self.conn.close()
 
     def GetPintures(self, page, kind):
-        self.cur.execute("select * from suidev_render")
+        self.cur.execute("SELECT * from suidev_render")
         #return json.dumps(self.cur.fetchall(), cls=CJsonEncoder)
         return self.cur.fetchall()
 
@@ -40,20 +40,20 @@ class SpaceData(SqlConnector) :
 
     def __del__(self) :
         super(SpaceData, self).__del__()
-    
+
     def AddSpace(self, name) :
         insert_cmd = "INSERT INTO suidev_space (name, create_time) VALUE(%s, %s)"
         insert_data = (name, datetime.now())
         self.cur.execute(insert_cmd, insert_data)
 
     def GetSpaces(self):
-        self.cur.execute('select * from suidev_space')
+        self.cur.execute('SELECT * from suidev_space')
         return self.cur.fetchall()
 
 class VisualData(SqlConnector) :
     def __init__(self) :
         super(VisualData, self).__init__()
-    
+
     def __del__(self) :
         super(VisualData, self).__del__()
 
@@ -70,13 +70,25 @@ class VisualData(SqlConnector) :
         return self.cur.lastrowid
 
 
-    def GetPlanets(self):
-        self.cur.execute('select * from suidev_planet  ORDER BY V.create_time DESC LIMIT 12')
-        return self.cur.fetchall()
+    def GetPlanets(self, page_id, page_size):
+        self.cur.execute('SELECT SQL_CALC_FOUND_ROWS * from suidev_planet  ORDER BY V.create_time DESC LIMIT 12')
+        data = self.cur.fetchall()
+        self.cur.execute('SELECT FOUND_ROWS() AS total')
+        count = self.cur.fetchone()
+        return data, count['total'] / page_size
 
-    def GetPlanetVisuals(self):
-        self.cur.execute('select * from suidev_planet_visual AS V join suidev_planet AS P on V.planet_id = P.id ORDER BY V.create_time DESC')
-        return self.cur.fetchall()
+    def GetPlanetVisuals(self, page_id, page_size):
+        self.cur.execute("SELECT SQL_CALC_FOUND_ROWS *, V.id AS visual_id from suidev_planet_visual AS V join suidev_planet AS P on V.light_angle = 0 and V.format = 'PNG' and V.planet_id = P.id ORDER BY V.create_time DESC")
+        data = self.cur.fetchall()
+        self.cur.execute('SELECT FOUND_ROWS() AS total')
+        count = self.cur.fetchone()
+        return data, count['total'] / page_size
+
+    def GetPlanetDetail(self, planet_id) :
+        insert_cmd = "SELECT V.id AS visual_id, P.create_time, P.kind, (SELECT SUM(render_time) FROM `suidev_planet_visual`  WHERE planet_id = P.id) AS render_time FROM suidev_planet_visual AS V JOIN suidev_planet AS P on P.id=%s AND V.format = %s AND V.planet_id = P.id ORDER BY V.rotate_z ASC"
+        insert_data = (planet_id, 'PNG')
+        self.cur.execute(insert_cmd, insert_data)
+        return self.cur.fetchall();
 
     def AddMaterial(self, name, color, kind, server_name):
         rgba = BlenderImporter.Color.RGBA_to_Hex(color)
@@ -90,9 +102,9 @@ class VisualData(SqlConnector) :
         insert_data = (material_id, datetime.now(), file_format, width, height, sample, render_time, model, scene)
         self.cur.execute(insert_cmd, insert_data)
         return self.cur.lastrowid
-    
+
     def GetMaterialVisuals(self, page_id, page_size):
-        self.cur.execute('select SQL_CALC_FOUND_ROWS * from suidev_material_visual AS V join suidev_material AS M on V.material_id = M.id ORDER BY V.create_time DESC LIMIT ' + str(page_id * page_size) + ',' +  str(page_size))
+        self.cur.execute('SELECT SQL_CALC_FOUND_ROWS * from suidev_material_visual AS V join suidev_material AS M on V.material_id = M.id ORDER BY V.create_time DESC LIMIT ' + str(page_id * page_size) + ',' +  str(page_size))
         data = self.cur.fetchall()
         self.cur.execute('SELECT FOUND_ROWS() AS total')
         count = self.cur.fetchone()
@@ -129,4 +141,3 @@ class TaskData(SqlConnector) :
             print(t)
             update_data = {'name' : t["name"], 'priority' : t["priority"]}
             self.cur.execute(update_cmd, update_data)
-

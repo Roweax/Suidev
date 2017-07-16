@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import StartMap from './components/StartMap.js';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { indigo100, indigo600, indigo800 } from 'material-ui/styles/colors';
 
-import { GridList, GridTile } from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
-
 
 import PlanetPage from './pages/PlanetPage.js';
 import InfoPage from './pages/InfoPage.js';
@@ -70,21 +65,21 @@ class App extends Component {
             <MuiThemeProvider muiTheme={muiTheme}>
             <div className="App" >
             <Tabs >
-            <Tab label="GALAXY">
+            <Tab label="PLANET">
             <PlanetPage></PlanetPage>
             </Tab>
             <Tab label="MATERIAL" >
             <MaterialPage/>
             </Tab>
-            <Tab label="FIGURE" data-route="/home">
+            <Tab label="FIGURE">
             <GeometryPage/>
             </Tab>
-            <Tab label="INFO" data-route="/home">
+            <Tab label="INFO">
             <div>
             <InfoPage/>
             </div>
             </Tab>
-            <Tab label="DEVELOP" data-route="/home">
+            <Tab label="ABOUT">
             <div>
             <DevelopPage/>
             </div>

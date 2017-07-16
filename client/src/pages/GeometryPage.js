@@ -3,8 +3,6 @@ import './GeometryPage.css';
 
 import GeometryItem from './GeometryItem.js';
 import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-
 import Dialog from 'material-ui/Dialog';
 import Page from '../components/Pager.js';
 
@@ -87,7 +85,7 @@ class GeometryPage extends Component {
             {this.state.geometries.map(
                 function (item) {
                     return (
-                        <GeometryItem data={item}></GeometryItem>
+                        <GeometryItem key={item.id} data={item}></GeometryItem>
                     )
                 }
             )}

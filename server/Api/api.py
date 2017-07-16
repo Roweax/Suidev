@@ -1,6 +1,7 @@
 from flask import Flask ,request
 import flask_restful
 import sys
+import decimal
 sys.path.append('../')
 from DataBase.SqlConnector import *
 
@@ -12,17 +13,37 @@ api = flask_restful.Api(app)
 def index():
     return app.send_static_file('index.html')
 
-class HelloWorld(flask_restful.Resource):
-    def get(self):
-        return app.send_static_file('html/index.html')
+#class HelloWorld(flask_restful.Resource):
+#    def get(self):
+#        return app.send_static_file('html/index.html')
+
+class CJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+            #elif isinstance(obj, date):
+            #return obj.strftime('%Y-%m-%d')
+        elif isinstance(obj, decimal.Decimal):
+            return str(obj)
+        elif isinstance(obj, bytearray) :
+            return obj.decode('utf8')
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 class MaterialVisual(flask_restful.Resource) :
-    def get(self) :
-        return VisualData().GetMaterialVisuals()
+    def get(self, page_id) :
+        data, pages = VisualData().GetMaterialVisuals(page_id, 12)
+        return json.dumps({'data':data, 'page_index':page_id}, cls = CJsonEncoder)
 
 class PlanetsVisual(flask_restful.Resource) :
-    def get(self) :
-        return VisualData().GetPlanetVisuals()
+    def get(self, page_id) :
+        data, pages = VisualData().GetPlanetVisuals(page_id, 12)
+        return json.dumps({'data':data, 'page_index':page_id}, cls = CJsonEncoder)
+
+class PlanetDetail(flask_restful.Resource) :
+    def get(self, planet_id) :
+        data = VisualData().GetPlanetDetail(planet_id)
+        return json.dumps(data, cls = CJsonEncoder)
 
 class SpaceVisuals(flask_restful.Resource) :
     def get(self) :
@@ -30,12 +51,13 @@ class SpaceVisuals(flask_restful.Resource) :
         return data
 
 class Logs(flask_restful.Resource) :
-    def get(self) :
-        return LogData().GetLog()
+    def get(self, page_id) :
+        data, pages =  LogData().GetLog(page_id, 50)
+        return json.dumps({'data':data, 'page_index':page_id}, cls = CJsonEncoder)
 
 class Tasks(flask_restful.Resource) :
     def get(self) :
-        return TaskData().GetTasks("render")
+        return json.dumps(TaskData().GetTasks("render"), cls = CJsonEncoder)
 
 class SetTasks(flask_restful.Resource) :
     def put(self) :
@@ -55,8 +77,10 @@ class Todo3(flask_restful.Resource):
         return {'task': 'Hello world'}, 201, {'Etag': 'some-opaque-string'}
 
 #api.add_resource(HelloWorld, '/')
-api.add_resource(MaterialVisual, '/api/materials')
-api.add_resource(Logs, '/api/logs')
+api.add_resource(MaterialVisual, '/api/materials/<int:page_id>')
+api.add_resource(PlanetsVisual, '/api/planets/<int:page_id>')
+api.add_resource(PlanetDetail, '/api/planetdetail/<int:planet_id>')
+api.add_resource(Logs, '/api/logs/<int:page_id>')
 api.add_resource(Tasks, '/api/tasks')
 api.add_resource(SetTasks, '/api/settasks')
 

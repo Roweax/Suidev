@@ -3,14 +3,8 @@ import './MaterialPage.css';
 
 import MaterialItem from './MaterialItem.js';
 import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-
 import Dialog from 'material-ui/Dialog';
 import Page from '../components/Pager.js';
-
-var testData = {
-    id: 1
-};
 
 class MaterialPage extends Component {
 

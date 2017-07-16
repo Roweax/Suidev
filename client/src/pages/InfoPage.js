@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import './InfoPage.css';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
-import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 
 import Paper from 'material-ui/Paper';
 import Chart from '../components/Chart.js'
 import Task from '../components/Task.js'
-import Page from '../components/Pager.js'
 
 import {
     Table,
@@ -45,7 +40,6 @@ class InfoPage extends Component {
     }
 
     componentDidMount() {
-    console.log("123")
         fetch('/api/logs/0' , {
             method: 'GET',
             headers: {
@@ -56,7 +50,6 @@ class InfoPage extends Component {
             return response.json();
         }).then((json) => {
             var data = JSON.parse(json);
-            console.log(data)
             this.setState({
                 logs : data.data
             });
@@ -92,7 +85,7 @@ class InfoPage extends Component {
             <div style={{display:'flex'}}>
             <spawn style={{width:80}}></spawn>
             <Checkbox
-            label="Galaxy"
+            label="Planet"
             style = {checkbox_style} checked = {true}
             />
             <Checkbox

@@ -1,5 +1,5 @@
-import React, {Component, PropTypes } from 'react';
-import Paper from 'material-ui/Paper';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import './Pager.css';
@@ -60,18 +60,18 @@ export default class Page extends React.Component{
             var arrFirst = [];//首页和前一页
             var arrLast = [];//尾页和后一页
             var arrLinkShow = []; //每次显示的页码
-            var prevDisplay = 1 == this.state.pageIndex ? 'disabled': ''; //当前页为1时，首页和前一页失效
-            var lastDisplay = this.state.pageNum == this.state.pageIndex ? 'disabled':'';//当前页为最后一页时，尾页和后一页失效
+            var prevDisplay = 1 === this.state.pageIndex ? 'disabled': ''; //当前页为1时，首页和前一页失效
+            var lastDisplay = this.state.pageNum === this.state.pageIndex ? 'disabled':'';//当前页为最后一页时，尾页和后一页失效
             //var startIndex = (Math.ceil(this.state.pageIndex/this.state.showLinkNum)-1) * this.state.showLinkNum + 1;//每次显示页数的开始页
             //var endIndex = Math.min(startIndex + this.state.showLinkNum,(this.state.pageNum+1));//每次显示页数的结束页
             var start_page = 1;
             var end_page = 10;
             for ( let i = start_page; i　<= end_page; i++ ) {
-                var currentIndexDisplay = i == this.state.pageIndex ? 'active' : '';
+                var currentIndexDisplay = i === this.state.pageIndex ? 'active' : '';
                 arrLinkShow.push(
                     <li key = {i} className = {currentIndexDisplay}>
 
-                    <RaisedButton label={i} primary={this.state.pageIndex == i} style={style} onClick={() => { this.handleChange(i);}}>
+                    <RaisedButton label={i} primary={this.state.pageIndex === i} style={style} onClick={() => { this.handleChange(i);}}>
                     </RaisedButton>
                     </li>
                 )

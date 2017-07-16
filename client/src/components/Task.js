@@ -25,7 +25,6 @@ class Task extends Component {
 		}).then((response) => {
 			return response.json();
 		}).then((json) => {
-			console.log(json);
 			this.setState({
 				prioritys : JSON.parse(json)
 			});
@@ -41,7 +40,7 @@ class Task extends Component {
 
 	valueChange(index, event, newValue) {
 		let p = this.state.prioritys;
-		p[index].priority = parseInt(newValue);
+		p[index].priority = parseInt(newValue, 10);
 		this.setState(p);
 	}
 
@@ -64,7 +63,6 @@ class Task extends Component {
 			return response.json();
 		})
 		.then((json) => {
-			console.log(json);
 		})
 		.catch(err => {
 			this.setState({
@@ -102,7 +100,7 @@ class Task extends Component {
 
 			{
 				this.state.prioritys.map(
-					(item, index) => (<div>
+					(item, index) => (<div key = {item.id}>
 						<div>
 						<p style={{textAlign:'left', float:'left'}}>{item.name}</p>
 						<p style={{textAlign:'left', float:'right'}}>{item.priority}</p>
