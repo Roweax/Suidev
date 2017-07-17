@@ -78,14 +78,14 @@ class VisualData(SqlConnector) :
         return data, count['total'] / page_size
 
     def GetPlanetVisuals(self, page_id, page_size):
-        self.cur.execute("SELECT SQL_CALC_FOUND_ROWS *, V.id AS visual_id from suidev_planet_visual AS V join suidev_planet AS P on V.light_angle = 0 and V.format = 'PNG' and V.planet_id = P.id ORDER BY V.create_time DESC")
+        self.cur.execute("SELECT SQL_CALC_FOUND_ROWS P.id AS planet_id, P.create_time, P.kind, V.id AS visual_id, (SELECT SUM(render_time) FROM suidev_planet_visual  WHERE planet_id = P.id) AS render_time from suidev_planet_visual AS V join suidev_planet AS P on V.light_angle = 0 and V.format = 'PNG' and V.planet_id = P.id ORDER BY V.create_time DESC")
         data = self.cur.fetchall()
         self.cur.execute('SELECT FOUND_ROWS() AS total')
         count = self.cur.fetchone()
         return data, count['total'] / page_size
 
     def GetPlanetDetail(self, planet_id) :
-        insert_cmd = "SELECT V.id AS visual_id, P.create_time, P.kind, (SELECT SUM(render_time) FROM `suidev_planet_visual`  WHERE planet_id = P.id) AS render_time FROM suidev_planet_visual AS V JOIN suidev_planet AS P on P.id=%s AND V.format = %s AND V.planet_id = P.id ORDER BY V.rotate_z ASC"
+        insert_cmd = "SELECT V.id AS visual_id FROM suidev_planet_visual AS V JOIN suidev_planet AS P on P.id=%s AND V.format = %s AND V.planet_id = P.id ORDER BY V.rotate_z ASC"
         insert_data = (planet_id, 'PNG')
         self.cur.execute(insert_cmd, insert_data)
         return self.cur.fetchall();
@@ -116,8 +116,9 @@ class LogData(SqlConnector) :
         super(LogData, self).__init__()
 
     def GetLog(self, page_id, page_size) :
-        #insert_cmd = "select * FROM (SELECT id, 'Space' AS category, 1 AS image, 1 as video, create_time FROM suidev_space_visual UNION ALL SELECT id, 'Material' AS category, 1 AS image, 0 as video, create_time FROM suidev_material_visual) ORDER BY create_time DES"
-        insert_cmd = "SELECT SQL_CALC_FOUND_ROWS id, 'Material' AS category, 1 AS image, 0 AS video, create_time FROM suidev_material_visual  ORDER BY create_time DESC LIMIT " + str(page_id * page_size) + ',' + str(page_size)
+        material = "SELECT SQL_CALC_FOUND_ROWS M.id, kind AS name, 'Material' AS category, 1 AS image, 0 AS video, M.create_time, server_name FROM  suidev_material_visual AS V join suidev_material AS M on V.material_id = M.id"
+        planet = "SELECT id, kind AS name, 'Planet' AS category, 12 AS image, 1 AS video, create_time, server_name FROM suidev_planet"
+        insert_cmd = material + " UNION ALL " + planet + " ORDER BY create_time DESC LIMIT " + str(page_id * page_size) + ',' + str(page_size)
         self.cur.execute(insert_cmd)
         data = self.cur.fetchall()
         self.cur.execute('SELECT FOUND_ROWS() AS total')

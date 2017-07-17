@@ -56,6 +56,31 @@ export default class Page extends React.Component{
             this.setState({pageNum:this.state.pageNum ,pageIndex:index});
             this.props.onChange(index - 1);
         }
+
+        handlePrev(){
+            if(this.state.pageIndex > 1) {
+                this.handleChange(this.state.pageIndex - 1)
+            }
+        }
+
+        handleFirst(){
+            if(this.state.pageIndex > 1) {
+                this.handleChange(1)
+            }
+        }
+
+        handleNext(){
+            if(this.state.pageIndex < 10) {
+                this.handleChange(this.state.pageIndex + 1)
+            }
+        }
+
+
+        handleLast(){
+            if(this.state.pageIndex < 10) {
+                this.handleChange(10)
+            }
+        }
         render(){
             var arrFirst = [];//首页和前一页
             var arrLast = [];//尾页和后一页
@@ -78,23 +103,22 @@ export default class Page extends React.Component{
             }
             arrFirst.push(
                 <li key="first" className = {prevDisplay}>
-                <RaisedButton label="首页" style={style}/>
+                <RaisedButton label="首页" style={style} onClick={() => { this.handleFirst();}}/>
                 </li>
             );
             arrFirst.push(
                 <li key = "1" className = {prevDisplay}>
-                <RaisedButton label="<" style={style}/>
+                <RaisedButton label="<" style={style} onClick={() => { this.handlePrev();}}/>
                 </li>
             );
             arrLast.push(
                 <li key ={this.state.pageNum} className = {lastDisplay} >
-
-                <RaisedButton label=">" style={style}/>
+                <RaisedButton label=">" style={style} onClick={() => { this.handleNext();}}/>
                 </li>
             );
             arrLast.push(
                 <li key = "last" className = {lastDisplay}>
-                <RaisedButton label="尾页" style={style}/>
+                <RaisedButton label="尾页" style={style} onClick={() => { this.handleLast();}}/>
                 </li>
             );
             return (

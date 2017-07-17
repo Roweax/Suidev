@@ -65,7 +65,7 @@ class GeometryPage extends Component {
         return (
             <div style={{ margin:'40px',display:'flex', flexWrap:'wrap', justifyContent:'center'}}>
 
-            <Dialog modal={false} open={this.state.open}>
+            <Dialog modal={false} open={this.state.open} onRequestClose={this.handleClose} >
             <div style={{position:'relative'}}>
             <div style={{position:'absolute'}}>
             <pre className="brush: cpp;">

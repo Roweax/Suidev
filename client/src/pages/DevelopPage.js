@@ -49,10 +49,12 @@ class DevelopPage extends Component {
             <Chip style={styles.chip}>React</Chip>
             <Chip style={styles.chip}>Material-UI</Chip>
             <Chip style={styles.chip}>ECharts</Chip>
+            <Chip style={styles.chip}>SyntaxHighlighter</Chip>
             <Chip style={styles.chip}>flask</Chip>
             <Chip style={styles.chip}>flask-restful</Chip>
             <Chip style={styles.chip}>blender</Chip>
             <Chip style={styles.chip}>Aliyun</Chip>
+            <Chip style={styles.chip}>AWS</Chip>
             </div>
             <h3>概述</h3>
             <p>这是一个通过脚本随机生成并渲染3D场景的演示网站。Planet（星球）页面展示的是随机生成的星球，Material（材质）页面展示的是随机材质在环境光照下效果，Geometry（几何体）页面展示的是随机几何体组合。Info（信息）页面可以查看记录以及调整生成任务的优先级。</p>

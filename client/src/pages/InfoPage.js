@@ -101,12 +101,13 @@ class InfoPage extends Component {
             fixedHeader={true}>
             <TableHeader>
             <TableRow>
-            <TableHeaderColumn>ID</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
+            <TableHeaderColumn width={30}>ID</TableHeaderColumn>
+            <TableHeaderColumn width={50}>Name</TableHeaderColumn>
             <TableHeaderColumn>归类</TableHeaderColumn>
             <TableHeaderColumn width={30}>Images</TableHeaderColumn>
             <TableHeaderColumn width={30}>Video</TableHeaderColumn>
             <TableHeaderColumn>Time</TableHeaderColumn>
+            <TableHeaderColumn>Render</TableHeaderColumn>
             </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={true}
@@ -117,12 +118,13 @@ class InfoPage extends Component {
                 return (
 
                     <TableRow key = {item.id}>
-                    <TableRowColumn>{item.id}</TableRowColumn>
-                    <TableRowColumn>{item.kind}</TableRowColumn>
+                    <TableRowColumn width={30}>{item.id}</TableRowColumn>
+                    <TableRowColumn width={50}>{item.name}</TableRowColumn>
                     <TableRowColumn>{item.category}</TableRowColumn>
                     <TableRowColumn width={30}>{item.image}</TableRowColumn>
                     <TableRowColumn width={30}>{item.video}</TableRowColumn>
                     <TableRowColumn>{item.create_time}</TableRowColumn>
+                    <TableRowColumn>{item.server_name}</TableRowColumn>
                     </TableRow>
                 )}
             )}
