@@ -125,6 +125,16 @@ class LogData(SqlConnector) :
         count = self.cur.fetchone()
         return data, count['total'] / page_size
 
+    def GetNewest(self, day) :
+        material = "SELECT M.id, kind AS name, 'Material' AS category, M.create_time, V.render_time, server_name FROM  suidev_material_visual AS V join suidev_material AS M on V.material_id = M.id"
+        planet = "SELECT P.id, kind AS name, 'Planet' AS category, P.create_time,  (SELECT SUM(render_time) FROM suidev_planet_visual  WHERE planet_id = P.id) AS render_time, server_name FROM suidev_planet AS P LEFT JOIN suidev_planet_visual AS PV on PV.planet_id = P.id and PV.light_angle = 0 and PV.format = 'PNG'"
+        insert_cmd = "SELECT * FROM(" + material + " UNION ALL " + planet + ")N WHERE DateDiff(create_time, NOW())<=" + str(day) + " ORDER BY create_time ASC"
+        self.cur.execute(insert_cmd)
+        data = self.cur.fetchall()
+        self.cur.execute('SELECT FOUND_ROWS() AS total')
+        count = self.cur.fetchone()
+        return data
+
 
 class TaskData(SqlConnector) :
     def __init__(self) :

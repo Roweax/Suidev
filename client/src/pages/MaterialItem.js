@@ -37,7 +37,7 @@ class MaterialItem extends Component {
 
     render() {
         return (
-            <div style = {{boxSizing: 'border-box',width:'33%', padding:'10px'}} onClick = {this.props.onShowLarge}>
+            <div style = {{boxSizing: 'border-box',width:'33%', padding:'10px'}} onClick = {() => {this.props.onShowLarge("http://suidev.oss-cn-hangzhou.aliyuncs.com/render/material/original/" + this.HexToStr(this.props.data.id, 8) + ".png")}}>
             <Card>
             <CardHeader
             title={this.props.data.kind}

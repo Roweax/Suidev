@@ -62,6 +62,19 @@ class GeometryPage extends Component {
             <FlatButton label="Submit" primary={true} disabled={true} onTouchTap={this.handleClose}/>,
         ];
 
+        let temp = <div>
+                <FlatButton label="Cancel" primary={true} onTouchTap={this.handleOpen}/>
+  <script type="text/javascript" src="./syntaxhighlighter.js"></script>
+
+            {this.state.geometries.map(
+                function (item) {
+                    return (
+                        <GeometryItem key={item.id} data={item}></GeometryItem>
+                    )
+                }
+            )}</div>
+
+
         return (
             <div style={{ margin:'40px',display:'flex', flexWrap:'wrap', justifyContent:'center'}}>
 
@@ -78,18 +91,7 @@ class GeometryPage extends Component {
             <img src='./1.jpeg' style={{height:'100%', width:'100%'}} ></img>
             </div>
             </Dialog>
-
-                <FlatButton label="Cancel" primary={true} onTouchTap={this.handleOpen}/>,
-  <script type="text/javascript" src="./syntaxhighlighter.js"></script>
-
-            {this.state.geometries.map(
-                function (item) {
-                    return (
-                        <GeometryItem key={item.id} data={item}></GeometryItem>
-                    )
-                }
-            )}
-
+            In Develop
             <Page start = {1} size = {9} total = {100} ></Page>
             </div>
         );

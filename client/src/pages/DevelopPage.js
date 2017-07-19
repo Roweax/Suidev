@@ -64,9 +64,9 @@ class DevelopPage extends Component {
             <p>本站使用阿里云和AWS的系列产品</p>
             <p>服务器：</p>
             <ul>
-            <li>1核CPU，4GB内存，Debian 8.6 64位操作系统（阿里云华东 ESC ecs.mn4.small）</li>
-            <li>1核CPU，1GB内存，Ubuntu 16.04 64位操作系统（阿里云美国西部 ESC ecs.xn4.small）</li>
-            <li>1核CPU，2GB内存，Ubuntu 16.04 64位操作系统（AWS美国西部 EC2 t2.micro）</li>
+            <li>CPU Xeon(R) E5-2682 v4 1核，4GB内存，Debian 8.6 64位操作系统（阿里云华东 ESC ecs.mn4.small）</li>
+            <li>CPU Xeon(R) E5-2682 v4 1核，1GB内存，Ubuntu 16.04 64位操作系统（阿里云美国西部 ESC ecs.xn4.small）</li>
+            <li>CPU 1核，2GB内存，Ubuntu 16.04 64位操作系统（AWS美国西部 EC2 t2.micro）</li>
             </ul>
             <p>数据库：</p>
             <ul>

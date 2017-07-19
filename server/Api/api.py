@@ -50,6 +50,11 @@ class SpaceVisuals(flask_restful.Resource) :
         data = VisualData().GetSpaceVisuals()
         return data
 
+class Newest(flask_restful.Resource) :
+    def get(self) :
+        data = LogData().GetNewest(30)
+        return json.dumps(data, cls = CJsonEncoder)
+
 class Logs(flask_restful.Resource) :
     def get(self, page_id) :
         data, pages =  LogData().GetLog(page_id, 50)
@@ -81,6 +86,7 @@ api.add_resource(MaterialVisual, '/api/materials/<int:page_id>')
 api.add_resource(PlanetsVisual, '/api/planets/<int:page_id>')
 api.add_resource(PlanetDetail, '/api/planetdetail/<int:planet_id>')
 api.add_resource(Logs, '/api/logs/<int:page_id>')
+api.add_resource(Newest, '/api/newest')
 api.add_resource(Tasks, '/api/tasks')
 api.add_resource(SetTasks, '/api/settasks')
 

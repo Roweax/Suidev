@@ -59,23 +59,23 @@ class InfoPage extends Component {
     }
 
 
-
     render() {
         return (
             <div style = {{width:'1000px', margin:'20px auto'}}>
             <div style = {{display: 'flex', minHeight :400}}>
+
             <div style = {{padding:'10px', width:'50%'}}>
             <Paper style={paper_style}>
             <Chart/>
-
             </Paper>
             </div>
-            <div  style = {{padding:'10px',width:'50%'}}>
 
+            <div  style = {{padding:'10px',width:'50%'}}>
             <Paper style={paper_style}>
             <Task/>
             </Paper>
             </div>
+
             </div>
 
             <div style = {{padding:'10px'}}>
@@ -93,7 +93,7 @@ class InfoPage extends Component {
             style = {checkbox_style} checked = {true}
             />
             <Checkbox
-            label="Figure"
+            label="Geometry"
             style = {checkbox_style} checked = {true}
             />
             </div>
