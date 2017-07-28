@@ -4,7 +4,9 @@ import './GeometryPage.css';
 import GeometryItem from './GeometryItem.js';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Page from '../components/Pager.js';
+import Toggle from 'material-ui/Toggle';
 
 class GeometryPage extends Component {
 
@@ -12,11 +14,14 @@ class GeometryPage extends Component {
         super(props);
         this.state = {
             geometries : [{}, {},{},{}],
-            open : false
+            open : false,
+            code : ""
         };
     }
 
     componentDidMount() {
+        
+        
         /*
         fetch('/api/geometries' , {
             method: 'GET',
@@ -47,13 +52,47 @@ class GeometryPage extends Component {
         document.body.appendChild(link);
     }
 
+
     handleOpen = () => {
         this.setState({open: true});
+
+        fetch('https://raw.githubusercontent.com/Roweax/Suidev/master/server/__main__.py'
+        ).then((response) => {
+            return response.text();
+        }).then((text) => {
+            console.log(text);
+            
+            this.setState({
+                code : text
+            });
+        }).catch(err => {
+            console.log("fetch error" + err);
+        });
     };
 
     handleClose = () => {
         this.setState({open: false});
     };
+
+
+
+  handleExpandChange = (expanded) => {
+    this.setState({expanded: expanded});
+  };
+
+  handleToggle = (event, toggle) => {
+    this.setState({expanded: toggle});
+  };
+
+  handleExpand = () => {
+    this.setState({expanded: true});
+  };
+
+  handleReduce = () => {
+    this.setState({expanded: false});
+  };
+
+
 
     render() {
         let code = "class OgreSkeletonReader{std::ostream errors;}\nclass OgreSkeletonReader{std::ostream errors;}\nclass OgreSkeletonReader{std::ostream errors;}\nclass OgreSkeletonReader{std::ostream errors;}\n";
@@ -78,11 +117,12 @@ class GeometryPage extends Component {
         return (
             <div style={{ margin:'40px',display:'flex', flexWrap:'wrap', justifyContent:'center'}}>
 
+                <FlatButton label="Cancel" primary={true} onTouchTap={this.handleOpen}/>
             <Dialog modal={false} open={this.state.open} onRequestClose={this.handleClose} >
             <div style={{position:'relative'}}>
             <div style={{position:'absolute'}}>
             <pre className="brush: cpp;">
-            {code}
+            {this.state.code}
             </pre>
             {
                 this.componentDidMount()
@@ -93,6 +133,22 @@ class GeometryPage extends Component {
             </Dialog>
             In Develop
             <Page start = {1} size = {9} total = {100} ></Page>
+
+            <Card style={{width : 800}} expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
+        <CardHeader
+          title="C++ Source Code"
+          subtitle="public files"
+          actAsExpander={true}
+          showExpandableButton={true}
+        />
+        <CardTitle title="C++ Source Code" subtitle="library files" expandable={true} />
+        <CardText expandable={true}>
+          
+            <pre className="brush: cpp;">
+            {this.state.code}
+            </pre>
+        </CardText>
+      </Card>
             </div>
         );
     }

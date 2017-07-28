@@ -44,7 +44,7 @@ class Material(object):
         node.inputs[0].default_value = color
         return node
 
-    def createMatelNode(self, color, roughness = 0.0, anisotropy = 0.0):
+    def createMetalNode(self, color, roughness = 0.0, anisotropy = 0.0):
         node = self.newNode('ShaderNodeBsdfAnisotropic', None)# nodes.new('ShaderNodeBsdfAnisotropic')
         #node.name = 'Me'
         node.inputs[0].default_value = color
@@ -70,6 +70,39 @@ class Material(object):
         node.inputs[0].default_value = color
         node.inputs[1].default_value = scale
         return node
+
+class DiffuseMaterial(Material) :
+    def __init__(self, name, color):
+        super(DiffuseMaterial, self).__init__(name)
+        node = self.createDiffuseNode(color)
+        self.baseMaterial.node_tree.links.new(node.outputs[0], self.getOutputNode().inputs[0])
+
+class MetalMaterial(Material) :
+    def __init__(self, name, color):
+        super(MetalMaterial, self).__init__(name)
+        node = self.createMetalNode(color)
+        self.baseMaterial.node_tree.links.new(node.outputs[0], self.getOutputNode().inputs[0])
+
+
+class SimpleGlassMaterial(Material) :
+    def __init__(self, name, color, roughness, ior = 1.45):
+        super(SimpleGlassMaterial, self).__init__(name)
+        node = self.createGlassNode(color, roughness, ior)
+        self.baseMaterial.node_tree.links.new(node.outputs[0], self.getOutputNode().inputs[0])
+
+class SubsurfaceMaterial(Material) :
+    def __init__(self, name, color, scale):
+        super(SubsurfaceMaterial, self).__init__(name)
+        node = self.createSubsurfaceNode(color, scale)
+        self.baseMaterial.node_tree.links.new(node.outputs[0], self.getOutputNode().inputs[0])
+
+        
+class EmissionMaterial(Material) :
+    def __init__(self, name, color, strength):
+        super(EmissionMaterial, self).__init__(name)
+        node = self.createEmissionNode(color, strength)
+        self.baseMaterial.node_tree.links.new(node.outputs[0], self.getOutputNode().inputs[0])
+
 
 class TestMaterial(Material):
     def __init__(self, name):
@@ -97,35 +130,7 @@ class TestMaterial(Material):
         #mat.use_shadeless = True
 
 
-class MetalMaterial(Material):
-    def __init__(self, name):
-        super(MetalMaterial, self).__init__(name, (1, 0, 0))
-        mat = bpy.data.materials.new(name)
-        mat.use_nodes = True
-        nodes = mat.node_tree.nodes
-        node = nodes[nodes.find('BSDF_DIFFUSE')]
-        mat.node_tree.nodes.remove(node)  # remove not used
-        
-        node = nodes.new('ShaderNodeBsdfAnisotropic')
-        node.name = 'Metal'
-        node.inputs[0].default_value = (0.64, 0.312, 0.044, 1.0)
-        node.inputs[1].default_value = 0
-        mat.node_tree.links.new(node.outputs[0], nodes['Material Output'].inputs[0])
-        self.baseMaterial = mat
 
-class SimpleGlassMaterial(Material):
-    def __init__(self, name):
-        super(SimpleGlassMaterial, self).__init__(name, (1, 0, 0))
-        mat = bpy.data.materials.new(name)
-        mat.use_nodes = True
-        nodes = mat.node_tree.nodes
-        node = nodes[nodes.find('BSDF_DIFFUSE')]
-        mat.node_tree.nodes.remove(node)  # remove not used
-        
-        node = nodes.new('ShaderNodeBsdfAnisotropic')
-        node.name = 'Glass'
-        mat.node_tree.links.new(node.outputs[0], nodes['Material Output'].inputs[0])
-        self.baseMaterial = mat
 
 
 class GlassMaterial(Material):
@@ -211,7 +216,7 @@ class RandomMaterial(Material) :
         if kind <=3 :
             node = None
             if kind == 0 :
-                node = self.createMatelNode(color)
+                node = self.createMetalNode(color)
                 state.material_name = "metal"
             elif kind == 1:
                 pure = random.randint(0, 1)
@@ -252,18 +257,19 @@ class RandomMaterial(Material) :
             state.color = color2
 
 class LibraryMaterial(Material) :
-    def __init__(self, file_path, material_name):
-        super(LibraryMaterial, self).__init__("")
+    def __init__(self, name, file_path, material_name):
+        super(LibraryMaterial, self).__init__(name)
 #    def loadLibraryNode(self, file_name, material_name) :
-        with bpy.data.libraries.load(Config.resource_path + "Material/" + file_path + '.blend') as (data_from, data_to):
-            data_to.materials = data_from.materials
-        self.baseMaterial = bpy.data.materials[material_name]
+        if not material_name in bpy.data.materials.keys():
+            with bpy.data.libraries.load(Config.resource_path + "Material/" + file_path + '.blend') as (data_from, data_to):
+                data_to.materials = data_from.materials
+        self.baseMaterial = bpy.data.materials[material_name].copy()
 
 
 
 class CarPaintMaterial(LibraryMaterial):
-    def __init__(self, color):
-        super(CarPaintMaterial, self).__init__("20-car-paint", "BMD_CarPaint_0020")
+    def __init__(self, name, color):
+        super(CarPaintMaterial, self).__init__(name, "20-car-paint", "BMD_CarPaint_0020")
         node = self.getNodeByType("BMD_CarPaintShader")
         node.inputs[0].default_value = color;
         node.inputs[2].default_value = color;
@@ -275,34 +281,34 @@ class CarPaintMaterial(LibraryMaterial):
         node.inputs[1].default_value = (color[0], color[1], color[2], 1.0)
 
 class GalvanizedMetalMaterial(LibraryMaterial):
-    def __init__(self, roughness):
-        super(GalvanizedMetalMaterial, self).__init__("21-galvanized-metal", "BMD_GalvanizedMetal_0021")
+    def __init__(self, name, roughness):
+        super(GalvanizedMetalMaterial, self).__init__(name, "21-galvanized-metal", "BMD_GalvanizedMetal_0021")
         node = self.getNodeByType("ShaderNodeBsdfAnisotropic")
         node.inputs[1].default_value = roughness
 
 
 class PianoPaintMaterial(LibraryMaterial):
-    def __init__(self, color):
-        super(PianoPaintMaterial, self).__init__("38-piano-paint", "palette")
+    def __init__(self, name, color):
+        super(PianoPaintMaterial, self).__init__(name, "38-piano-paint", "palette")
         node = self.getNode("RGB")
         node.outputs[0].default_value = color
 
 
 class LollipopMaterial(LibraryMaterial) :
-    def __init__(self, color):
-        super(LollipopMaterial, self).__init__("63-lollipop", "BMD_Lollipop")
+    def __init__(self, name, color):
+        super(LollipopMaterial, self).__init__(name, "63-lollipop", "BMD_Lollipop")
         node = self.getNodeByType("BMD_LollipopShader")
         node.inputs[0].default_value = color;
 
 class LegoPlasticMaterial(LibraryMaterial) :
-    def __init__(self, color):
-        super(LegoPlasticMaterial, self).__init__("62-lego-abs-plastic", "BMD_LegoPlastic")
+    def __init__(self, name, color):
+        super(LegoPlasticMaterial, self).__init__(name, "62-lego-abs-plastic", "BMD_LegoPlastic")
         node = self.getNodeByType("BMD_LegoPlasticShader")
         node.inputs[0].default_value = color
 
 
 class LedMaterial(LibraryMaterial):
-    def __init__(self, color):
-        super(LedMaterial, self).__init__("64-green-led_emission", "green1-LED")
+    def __init__(self, name, color):
+        super(LedMaterial, self).__init__(name, "64-green-led_emission", "green1-LED")
         node = self.getNode("Emission")
         node.inputs[0].default_value = color

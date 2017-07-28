@@ -22,7 +22,7 @@ def resize(in_file, out_file, width) :
     out.save(out_file)
 
 def GetTask() :
-    return "space"
+    return "geomtery"
 
 def ClearFiles() :
     DeleteFiles(Config.data_path + "temp/", "png")
@@ -62,6 +62,12 @@ if __name__ == "__main__":
         
         ClearFiles()
 
+        if task == "geomtery" :
+            aliyun_oss = AliyunOSS()
+            task_list = aliyun_oss.List("task")
+            print(task_list[0])
+            aliyun_oss.Load(task_list[0], Config.resource_path + "task.json")
+
         start = datetime.now()
         #os.system('export PATH=/root/develop/blender-2.78c/:$PATH')
         os.system('export PATH=/root/develop/blender-2.78c:$PATH\n  blender -b -noaudio -P BlenderImporter/Run.py')
@@ -72,6 +78,7 @@ if __name__ == "__main__":
         render_data_file = shelve.open(Config.data_path + "temp/render")
         state = render_data_file["render"]
         render_data_file.close()
+
         if task == "scene":
             if os.path.exists(temp_file):
                 visual = VisualData()
@@ -107,4 +114,8 @@ if __name__ == "__main__":
                     else :
                         aliyun_oss.Save(Config.data_path + "temp/0000-0239.mp4", "render/planet/video/{0:08X}.mp4".format(p_id))
                 del visual
+        elif task == "geomtery":
+            SaveTempToOSS()
+
+
         time.sleep(5)

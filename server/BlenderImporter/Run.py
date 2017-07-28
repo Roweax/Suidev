@@ -16,5 +16,5 @@ render_task = shelve.open(Config.data_path + "temp/render", protocol=2, writebac
 kind = render_task["kind"]
 render_task.close()
 importer = Importer()
-importer.Render(Config.resource_path + kind + ".json")
+importer.Render(kind)
 

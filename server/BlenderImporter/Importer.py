@@ -10,7 +10,6 @@ import dbm
 class Importer(object):
     """description of class"""
     def __init__(self):
-        aa = 1
         #delete the cube
         bpy.ops.object.delete(use_global=True)
         
@@ -25,9 +24,15 @@ class Importer(object):
         #bpy.context.object.data.sensor_width = 8.8
         #bpy.context.object.data.sensor_height = 6.6
         
-    def Render(self, xmlfile):
-        (name, fileext) = os.path.splitext(xmlfile)
-        scene = SpaceScene()
+    def Render(self, name):
+        scene = None
+        if name == "space" :
+            #scene = SpaceScene()
+            print("render space")
+        elif name == "geomtery" : 
+            scene = GeomteryScene()
+        else :
+            scene = Scene()
         #Add a lamp.
         #bpy.ops.object.lamp_add(type='POINT', radius=1, view_align=False, location=(0, 1.5, 2.5), layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
         #bpy.context.object.data.shadow_soft_size = 0.01
@@ -75,6 +80,7 @@ class Importer(object):
         bpy.context.scene.cycles.progressive = 'PATH'
         bpy.context.scene.cycles.use_progressive_refine = True
         scene.Render()
+
         #bpy.ops.render.render(animation=True)
         #render_data_file = shelve.Shelf(dbm.open(Config.data_path + "temp/render", 'w'))
         render_data_file = shelve.open(Config.data_path + "temp/render", protocol=2, writeback=True)

@@ -22,6 +22,7 @@ class Scene(object):
         self.Obejcts = []
         self.Materials = {}
         self.render_result = []
+        self.template_cube = None
 
 
     def AddObject(self, object):
@@ -64,7 +65,7 @@ class Scene(object):
                     bpy.context.scene.objects.link(bpy.data.objects[obj])
 
 
-    def Load(self, json_file):
+    def LoadJson(self, json_file):
         self.LoadResource()
         f = open(json_file)
         scene_info = json.loads(f.read())
@@ -83,23 +84,69 @@ class Scene(object):
         
         if 'Materials' in scene_info.keys() :
             for material_info in scene_info['Materials']:
-                material = Material(material_info['id'], material_info['color'])
+                mat_type = material_info['type']
+                name = material_info['id']
+                if mat_type == "Lego" :
+                    material = LegoPlasticMaterial(name, material_info['color'])
+                elif mat_type == "CarPaint" :
+                    material = CarPaintMaterial(name, material_info['color'])
+                elif mat_type == "Glass" :
+                    material = SimpleGlassMaterial(name, material_info['color'], 0.0)
+                elif mat_type == "PianoPaint":
+                    material = PianoPaintMaterial(name, material_info['color'])
+                elif mat_type == "Lollipop":
+                    material = LollipopMaterial(name, material_info['color'])
+                elif mat_type == "Led":
+                    material = LedMaterial(name, material_info['color'])
+                elif mat_type == "Diffuse":
+                    material = DiffuseMaterial(name, material_info['color'])
+                elif mat_type == "Metal":
+                    material = MetalMaterial(name, material_info['color'])
+                elif mat_type == "Subsurface":
+                    material = SubsurfaceMaterial(name, material_info['color'], 3)
+                elif mat_type == "Emission":
+                    material = EmissionMaterial(name, material_info['color'], 3)
+                else :
+                    material = Material(name, material_info['color'])
                 self.AddMaterial(material)
-            self.AddMaterial(TestMaterial('Test'))
-            self.AddMaterial(GlassMaterial('Glass'))
-            self.AddMaterial(SimpleGlassMaterial('SimpleGlass'))
-            self.AddMaterial(MetalMaterial('Metal'))
-            self.AddMaterial(RandomMaterial("Rand"))
+                print ('Add a material' + name)
+
+        #self.AddMaterial(GlassMaterial('Glass'))
+        #self.AddMaterial(SimpleGlassMaterial((0, 1, 0.4, 1.0), 0.0))
+        #self.AddMaterial(MetalMaterial((0, 1, 0.4, 1.0)))
+        #self.AddMaterial(RandomMaterial("Rand"))
         
         if 'Objects' in scene_info.keys():
+            add_objects = [];
             for object_info in  scene_info['Objects']:
                 entity = None
                 if(object_info['type'] == 'cube') :
                     entity = Entity()
-                    bpy.ops.mesh.primitive_cube_add(radius = object_info['size'], view_align=False, enter_editmode=False, location=object_info['position'], layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
+                    if self.template_cube == None :
+                        bpy.ops.mesh.primitive_cube_add(radius = 1, view_align=False, enter_editmode=False, location=object_info['position'], layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
                 #scale = object_info['size']
-                    entity.baseObject = bpy.context.object
-                    print ('Add a Cube')
+                        self.template_cube = bpy.context.object
+                        self.template_cube.hide_render = True
+                        #entity.baseObject = bpy.context.object
+                    
+                    copy = self.template_cube.copy()
+                    copy.hide_render = False
+                    copy.data = copy.data.copy() # also duplicate mesh, remove for linked duplicate
+                    copy.location = object_info['position']
+                    copy.scale = (object_info['size'], object_info['size'], object_info['size'])
+                    add_objects.append(copy)
+                    entity.baseObject = copy
+                    print ('Add a Cube' + object_info['id'])
+
+                elif(object_info['type'] == 'lamp') :
+                    lamp_data = bpy.data.lamps.new(name=object_info['id'], type='POINT')
+                    lamp_object = bpy.data.objects.new(name=object_info['id'], object_data=lamp_data)
+                    # Link lamp object to the scene so it'll appear in this scene
+                    bpy.context.scene.objects.link(lamp_object)
+                    # Place lamp to a specified location
+                    lamp_object.location = object_info['position']
+                    lamp_data.color = object_info['color']
+                    print ('Add a Lamp')
                 elif(object_info['type'] == 'model'):
                     entity = Model(object_info['id'] + '.obj')
                     state = State.instance
@@ -107,6 +154,9 @@ class Scene(object):
                 if entity != None :
                     entity.SetMaterial(self.Materials[object_info['material']])
                     self.AddObject(entity)
+            for ob in add_objects:
+                bpy.context.scene.objects.link(ob)
+            bpy.context.scene.update()
         
         if 'HDR' in scene_info.keys() :
             hdr = scene_info['HDR']
@@ -390,3 +440,38 @@ class SpaceScene(Scene):
         planet["kind"] = self.kind
         planet["ring"] = self.has_ring
         State.instance.Set("planet", planet)
+
+
+class GeomteryScene(Scene) :
+    def __init__(self):
+        super(GeomteryScene, self).__init__()
+        self.main_h = 0
+
+
+    def Load(self) : 
+        self.LoadJson(Config.resource_path + "task.json")
+
+
+
+    def Render(self) :
+        '''Render Images'''
+        bpy.data.worlds["World"].horizon_color = (0.7, 0.7, 0.7)
+        #bpy.context.scene.render.resolution_x = 800 * 2
+        #bpy.context.scene.render.resolution_y = 600 * 2
+        bpy.context.scene.frame_start = 0
+        bpy.context.scene.frame_end = 0
+        bpy.context.scene.frame_step = 1
+        bpy.context.scene.cycles.samples = 20
+        bpy.context.scene.cycles.film_transparent = False
+        bpy.context.scene.render.image_settings.file_format = 'PNG'
+        bpy.context.scene.render.image_settings.color_mode = 'RGBA'
+        bpy.context.scene.render.resolution_percentage = 100
+        bpy.context.scene.render.filepath = Config.data_path+ "temp/"
+        result = self.GetRenderParams()
+        result["frame"] = 0
+        result["length"] = 0
+        result["render_time"] = self.CoreRender(True)
+        self.AddRenderResult(result)
+        bpy.ops.wm.save_as_mainfile(filepath = Config.data_path + "temp/scene.blend")
+        State.instance.Set("result", self.GetRenderResult())
+        
