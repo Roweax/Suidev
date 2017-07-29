@@ -50,6 +50,11 @@ class SpaceVisuals(flask_restful.Resource) :
         data = VisualData().GetSpaceVisuals()
         return data
 
+class GeomteryVisuals(flask_restful.Resource) :
+    def get(self) :
+        data = VisualData().GetGeomteryVisuals()
+        return json.dumps(data, cls = CJsonEncoder)
+
 class Newest(flask_restful.Resource) :
     def get(self) :
         data = LogData().GetNewest(30)
@@ -86,6 +91,7 @@ api.add_resource(MaterialVisual, '/api/materials/<int:page_id>')
 api.add_resource(PlanetsVisual, '/api/planets/<int:page_id>')
 api.add_resource(PlanetDetail, '/api/planetdetail/<int:planet_id>')
 api.add_resource(Logs, '/api/logs/<int:page_id>')
+api.add_resource(GeomteryVisuals, '/api/geomteries')
 api.add_resource(Newest, '/api/newest')
 api.add_resource(Tasks, '/api/tasks')
 api.add_resource(SetTasks, '/api/settasks')

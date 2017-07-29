@@ -78,7 +78,7 @@ class VisualData(SqlConnector) :
         return data, count['total'] / page_size
 
     def GetPlanetVisuals(self, page_id, page_size):
-        self.cur.execute("SELECT SQL_CALC_FOUND_ROWS P.id AS planet_id, P.create_time, P.kind, V.id AS visual_id, (SELECT SUM(render_time) FROM suidev_planet_visual  WHERE planet_id = P.id) AS render_time from suidev_planet_visual AS V join suidev_planet AS P on V.light_angle = 0 and V.format = 'PNG' and V.planet_id = P.id ORDER BY V.create_time DESC")
+        self.cur.execute("SELECT SQL_CALC_FOUND_ROWS P.id AS planet_id, P.create_time, P.kind, V.id AS visual_id, (SELECT SUM(render_time) FROM suidev_planet_visual  WHERE planet_id = P.id) AS render_time from suidev_planet_visual AS V join suidev_planet AS P on V.light_angle = 0 and V.format = 'PNG' and V.planet_id = P.id ORDER BY V.create_time DESC LIMIT 40")
         data = self.cur.fetchall()
         self.cur.execute('SELECT FOUND_ROWS() AS total')
         count = self.cur.fetchone()
@@ -111,7 +111,7 @@ class VisualData(SqlConnector) :
         return data, count['total'] / page_size
 
 
-    def GetGeomteryVisual(self) :
+    def GetGeomteryVisuals(self) :
         self.cur.execute('SELECT  * from suidev_geomtery')
         data = self.cur.fetchall()
         return data
