@@ -461,7 +461,7 @@ class GeomteryScene(Scene) :
         bpy.context.scene.frame_start = 0
         bpy.context.scene.frame_end = 0
         bpy.context.scene.frame_step = 1
-        bpy.context.scene.cycles.samples = 20
+        bpy.context.scene.cycles.samples = 500
         bpy.context.scene.cycles.film_transparent = False
         bpy.context.scene.render.image_settings.file_format = 'PNG'
         bpy.context.scene.render.image_settings.color_mode = 'RGBA'

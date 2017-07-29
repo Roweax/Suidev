@@ -1,0 +1,6 @@
+#item_code .syntaxhighlighter  {
+	top:-15px;
+    height: 405px;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}

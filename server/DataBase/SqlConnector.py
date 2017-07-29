@@ -111,6 +111,12 @@ class VisualData(SqlConnector) :
         return data, count['total'] / page_size
 
 
+    def GetGeomteryVisual(self) :
+        self.cur.execute('SELECT  * from suidev_geomtery')
+        data = self.cur.fetchall()
+        return data
+
+
 class LogData(SqlConnector) :
     def __init__(self):
         super(LogData, self).__init__()

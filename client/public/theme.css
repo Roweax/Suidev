@@ -166,11 +166,11 @@
     color: black !important; }
 
 .syntaxhighlighter {
-  background-color: white !important; }
+  background-color: rgba(255, 255, 255, 0.6) !important; }
   .syntaxhighlighter .line.alt1 {
-    background-color: white !important; }
+    background-color: rgba(255, 255, 255, 0.0) !important; }
   .syntaxhighlighter .line.alt2 {
-    background-color: white !important; }
+    background-color: rgba(255, 255, 255, 0.0) !important; }
   .syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
     background-color: #e0e0e0 !important; }
   .syntaxhighlighter .line.highlighted.number {

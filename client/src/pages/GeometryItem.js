@@ -16,7 +16,7 @@ class GeometryItem extends Component {
 
     render() {
         return (
-            <Paper style = {{boxSizing: 'border-box',width:250, height:250, padding:10, margin:10}} onClick = {this.props.onShowLarge}>
+            <Paper style = {{boxSizing: 'border-box',width:250, height:250, padding:10, margin:10}} onClick = {() => {this.props.onShowLarge("http://suidev.oss-cn-hangzhou.aliyuncs.com/render/material/original/"  + "00000001.png")}}>
                 <img src='./1.jpeg' style={{height:'100%', width:'100%'}} ></img>
             </Paper>
         );
